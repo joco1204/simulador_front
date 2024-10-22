@@ -9,7 +9,7 @@ import { PeriodoPago } from '../../Interfaces/PeriodoPagoInterface';
 
 export default function Simulacion() {
     const { tipo_documento, numero_documento, tipo_credito } = useParams();
-    const navigate = useNavigate(); // Inicializa useNavigate
+    const navigate = useNavigate();
     const [marcas, setMarcas] = useState<MarcaMoto[]>([]);
     const [lineas, setLineas] = useState<LineaMoto[]>([]);
     const [valorSolicitud, setValorSolicitud] = useState('');
@@ -51,24 +51,34 @@ export default function Simulacion() {
     };
 
     const handleCalcularCredito = () => {
-        const valorSinInteres = parseFloat(valorSolicitud) / parseInt(numeroCuotas);
-        const intereses = (valorSinInteres / 100) * parseFloat(valorInteres);
-        const valorCuotaMensual = valorSinInteres + intereses;
-
+        const montoSolicitado = parseFloat(valorSolicitud);
+        const interesAnual = parseFloat(valorInteres);
+        const cuotas = parseInt(numeroCuotas);
+    
+        if (isNaN(montoSolicitado) || isNaN(interesAnual) || isNaN(cuotas) || cuotas <= 0) {
+            alert('Por favor, completa todos los campos correctamente.');
+            return;
+        }
+    
+        const diasDelMes = 30; 
+        const interes = (montoSolicitado * (interesAnual / 100)) * (cuotas / diasDelMes);
+        const valorTotalConInteres = montoSolicitado + interes;
+        const valorCuotaMensual = valorTotalConInteres / cuotas;
+    
         const periodo = periodos.find((p) => p.id === parseInt(periodoSeleccionado));
         if (periodo) {
-            const valorCuota = (valorCuotaMensual / 30) * periodo.dias;
-            const valorTotal = valorCuotaMensual * parseInt(numeroCuotas);
+            const valorCuota = valorCuotaMensual;
+            const totalPagar = valorCuotaMensual * cuotas;
             setValorCuota(valorCuota.toFixed(0));
-            setValorTotal(valorTotal.toFixed(0));
+            setValorTotal(totalPagar.toFixed(0));
         } else {
             console.error('Periodo no encontrado');
         }
-
+    
         const fechaInicio = new Date(fechaInicioCredito);
-        fechaInicio.setMonth(fechaInicio.getMonth() + parseInt(numeroCuotas));
+        fechaInicio.setMonth(fechaInicio.getMonth() + cuotas);
         setFechaFinCredito(fechaInicio.toISOString().split('T')[0]);
-
+    
         setMostrarBotonConfirmar(true); 
     };
 
@@ -76,47 +86,55 @@ export default function Simulacion() {
         navigate('/cliente');
     };
 
-    const labelValor = tipo_credito === '3' ? 'Precio eBike' : 'Valor Solicitud';
+    const labelValor = tipo_credito === '2' ? 'Precio Moto' : tipo_credito === '3' ? 'Precio eBike' : 'Valor Solicitud';
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="d-flex justify-content-center align-items-center py-5">
             <form className="p-4 border rounded">
-                {tipo_credito === '1' || tipo_credito === '3' ? (
+                {tipo_credito === '1' || tipo_credito === '2' || tipo_credito === '3' ? (
                     <>
-                        <div className="row mb-3">
-                            <div className="col-md-6">
-                                <label>Marca</label>
-                                <select
-                                    className="form-control"
-                                    value={marcaSeleccionada}
-                                    onChange={handleMarcaChange}
-                                >
-                                    <option value="">Seleccione una marca</option>
-                                    {marcas.map((marca) => (
-                                        <option key={marca.id} value={marca.id}>
-                                            {marca.marca}
-                                        </option>
-                                    ))}
-                                </select>
+                        { tipo_credito === '2' && (
+                            <div className="row mb-3">
+                                <div className="col-md-6">
+                                    <label>Marca</label>
+                                    <select
+                                        className="form-control"
+                                        value={marcaSeleccionada}
+                                        onChange={handleMarcaChange}
+                                    >
+                                        <option value="">Seleccione una marca</option>
+                                        {marcas.map((marca) => (
+                                            <option key={marca.id} value={marca.id}>
+                                                {marca.marca}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
+                                <div className="col-md-6">
+                                    <label>Línea</label>
+                                    <select
+                                        className="form-control"
+                                        value={lineaSeleccionada ? lineaSeleccionada.id : ''}
+                                        onChange={handleLineaChange}
+                                        disabled={!marcaSeleccionada}
+                                    >
+                                        <option value="">Seleccione una línea</option>
+                                        {lineas.map((linea) => (
+                                            <option key={linea.id} value={linea.id}>
+                                                {linea.linea}
+                                            </option>
+                                        ))}
+                                    </select>
+                                </div>
                             </div>
-                            <div className="col-md-6">
-                                <label>Línea</label>
-                                <select
-                                    className="form-control"
-                                    value={lineaSeleccionada ? lineaSeleccionada.id : ''}
-                                    onChange={handleLineaChange}
-                                    disabled={!marcaSeleccionada}
-                                >
-                                    <option value="">Seleccione una línea</option>
-                                    {lineas.map((linea) => (
-                                        <option key={linea.id} value={linea.id}>
-                                            {linea.linea}
-                                        </option>
-                                    ))}
-                                </select>
+                        )}
+                        {lineaSeleccionada && (
+                            <div className="row mb-3">
+                                <div className="col-md-12">
+                                    <img src={lineaSeleccionada.url_imagen} alt="Imagen de la moto" className="img-fluid" width="500" height="500" />
+                                </div>
                             </div>
-                        </div>
-
+                        )}
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <label>{labelValor}</label>
@@ -163,24 +181,18 @@ export default function Simulacion() {
                                 </select>
                             </div>
                         </div>
-                        <button
-                            type="button"
-                            className="btn btn-primary mb-3"
-                            onClick={handleCalcularCredito}
-                        >
-                            Calcular Crédito
-                        </button>
-
-                        {mostrarBotonConfirmar && ( 
-                            <button
-                                type="button"
-                                className="btn btn-success mb-3"
-                                onClick={handleConfirmarCliente}
-                            >
-                                Confirmar Cliente
-                            </button>
-                        )}
-
+                        <div className="row mb-3">
+                            <div className="col-md-12">
+                                <button
+                                    type="button"
+                                    className="btn btn-primary mb-3"
+                                    onClick={handleCalcularCredito}
+                                >
+                                    Calcular Crédito
+                                </button>
+                            </div>
+                        </div>
+                                
                         <div className="row mb-3">
                             <div className="col-md-6">
                                 <label>Valor Cuota</label>
@@ -206,13 +218,29 @@ export default function Simulacion() {
                                 />
                             </div>
                         </div>
-                        <div className="mb-3">
-                            <label>Fecha Fin Crédito</label>
-                            <input type="date" className="form-control" value={fechaFinCredito} readOnly />
+                        <div className="row mb-3">
+                            <div className="col-md-6">
+                                <label>Fecha Fin Crédito</label>
+                                <input type="text" className="form-control" value={fechaFinCredito} readOnly />
+                            </div>
                         </div>
+                        <div className="row mb-3 text-center">
+                            <div className="col-md-12">
+                                {mostrarBotonConfirmar && ( 
+                                    <button
+                                        type="button"
+                                        className="btn btn-success mb-3"
+                                        onClick={handleConfirmarCliente}
+                                    >
+                                        Confirmar Cliente
+                                    </button>
+                                )}
+                            </div>
+                        </div>
+                                
                     </>
                 ) : (
-                    <p>No hay datos disponibles para este tipo de crédito.</p>
+                    <h2>No se ha encontrado el tipo de crédito</h2>
                 )}
             </form>
         </div>
