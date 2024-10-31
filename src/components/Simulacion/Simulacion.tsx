@@ -101,7 +101,7 @@ export default function Simulacion() {
             fechaFinCredito,
             ...(tipo_credito === '2' && {
                 marcaSeleccionada,
-                lineaSeleccionada: lineaSeleccionada?.id,
+                lineaSeleccionada: lineaSeleccionada?.id.toString(),
             }),
         };
     
