@@ -104,7 +104,7 @@ export default function Clientes() {
         <div className="d-flex justify-content-center align-items-center vh-100">
             <div className="card p-4">
                 <h4 className="text-center">Datos de Cliente</h4>
-                <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }}>
+                <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} autoComplete='off'>
                     <div className="row mb-3">
                         <div className="col-md-6">
                             <label>Nombres</label>

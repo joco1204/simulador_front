@@ -112,7 +112,7 @@ export default function Simulacion() {
 
     return (
         <div className="d-flex justify-content-center align-items-center py-5">
-            <form className="p-4 border rounded">
+            <form className="p-4 border rounded" autoComplete='off'>
                 {tipo_credito === '1' || tipo_credito === '2' || tipo_credito === '3' ? (
                     <>
                         { tipo_credito === '2' && (

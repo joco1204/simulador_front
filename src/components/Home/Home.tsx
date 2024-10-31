@@ -40,7 +40,7 @@ export default function Home() {
     
             if (!cliente) {
                 navigate(`/simulacion/${selectedTipoDoc}/${numeroIdentificacion}/${selectedTipoCredito}`);
-            } else {
+            } else if (cliente.id !== undefined) {
                 const credito = await fetchCredito(cliente.id);
     
                 if (!credito) {
@@ -61,7 +61,7 @@ export default function Home() {
                             Swal.fire({
                                 icon: 'warning',
                                 title: 'Crédito Activo',
-                                text: 'Ya cuenta con un un crédito activo.',
+                                text: 'Ya cuenta con un crédito activo.',
                             });
                         } else {
                             navigate(`/simulacion/${selectedTipoDoc}/${numeroIdentificacion}/${selectedTipoCredito}`);
@@ -70,17 +70,19 @@ export default function Home() {
                         navigate(`/simulacion/${selectedTipoDoc}/${numeroIdentificacion}/${selectedTipoCredito}`);
                     }
                 }
+            } else {
+                console.error('Error: Cliente sin ID');
             }
         } catch (error) {
             console.error('Error en la búsqueda del cliente o crédito:', error);
         }
-    };
+    };    
 
     return (
         <div className="home-container d-flex justify-content-center align-items-center py-5">
             <div className="card p-4" style={{ width: '400px' }}>
                 <h4 className="text-center">Formulario de Solicitud</h4>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} autoComplete='off'>
                     <div className="mb-3">
                         <label htmlFor="tipo-documento" className="form-label">Tipo de Documento</label>
                         <select
