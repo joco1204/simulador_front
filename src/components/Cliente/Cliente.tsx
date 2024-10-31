@@ -66,7 +66,7 @@ export default function Clientes() {
                 valor_interes: datosCredito.valorInteres,
                 valor_cuota_mensual: datosCredito.valorCuota,
                 valor_cuota_periodo: datosCredito.valorCuota,
-                id_linea_moto: datosCredito.lineaSeleccionada ? String(datosCredito.lineaSeleccionada.id) : '',
+                id_linea_moto: datosCredito.lineaSeleccionada,
                 valor_total: datosCredito.valorTotal,
                 fecha_solicitud: datosCredito.fechaSolicitud,
                 fecha_inicio_credito: datosCredito.fechaInicioCredito,
