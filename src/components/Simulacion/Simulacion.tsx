@@ -27,6 +27,9 @@ export default function Simulacion() {
     const [mostrarBotonConfirmar, setMostrarBotonConfirmar] = useState(false);
 
     useEffect(() => {
+        if (localStorage.getItem('datosCredito')) {
+            localStorage.removeItem('datosCredito');
+        }
         fetchMarcaMoto().then(setMarcas);
         fetchPeriodos().then(setPeriodos);
     }, []);

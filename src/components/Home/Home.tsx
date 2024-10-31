@@ -18,6 +18,9 @@ export default function Home() {
     const navigate = useNavigate();
 
     useEffect(() => {
+        if (localStorage.getItem('datosCredito')) {
+            localStorage.removeItem('datosCredito');
+        }
         const loadData = async () => {
             try {
                 const documentos = await fetchTipoDocumento();
@@ -28,7 +31,7 @@ export default function Home() {
                 console.error('Error al cargar los datos:', error);
             }
         };
-
+    
         loadData();
     }, []);
 

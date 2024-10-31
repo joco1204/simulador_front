@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom'
 import Swal from 'sweetalert2';
 import { Cliente } from '../../Interfaces/ClienteInterface';
 import { createCliente } from '../../Services/ClienteService';
@@ -7,7 +7,8 @@ import { createCredito } from '../../Services/CreditoService';
 import { Credito } from '../../Interfaces/CreditoInterface';
 
 export default function Clientes() {
-    const { tipo_documento = "", numero_documento = "" } = useParams(); 
+    const { tipo_documento = "", numero_documento = "" } = useParams();
+    const navigate = useNavigate();
 
     const [formData, setFormData] = useState({
         nombres: '',
@@ -76,11 +77,14 @@ export default function Clientes() {
             const creditoResponse = await createCredito(creditoData);
 
             if (creditoResponse) {
+                localStorage.removeItem('datosCredito');
                 Swal.fire({
                     title: 'Éxito',
                     text: 'Su solicitud ha sido creada con éxito',
                     icon: 'success',
                     confirmButtonText: 'Aceptar'
+                }).then(() => {
+                    navigate('/');
                 });
             } else {
                 Swal.fire({
