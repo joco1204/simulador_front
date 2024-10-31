@@ -77,7 +77,7 @@ export default function Home() {
     };
 
     return (
-        <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="d-flex justify-content-center align-items-center py-5">
             <div className="card p-4" style={{ width: '400px' }}>
                 <h4 className="text-center">Formulario de Solicitud</h4>
                 <form onSubmit={handleSubmit}>

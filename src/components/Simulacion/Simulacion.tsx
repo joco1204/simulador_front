@@ -83,8 +83,31 @@ export default function Simulacion() {
     };
 
     const handleConfirmarCliente = () => {
-        navigate('/cliente');
+        // Verifica si el tipo de crédito es 2 para incluir marca y línea
+        const datosCredito = {
+            tipo_documento,
+            numero_documento,
+            tipo_credito,
+            valorSolicitud,
+            valorInteres,
+            numeroCuotas,
+            periodoSeleccionado,
+            valorCuota,
+            valorTotal,
+            fechaSolicitud,
+            fechaInicioCredito,
+            fechaFinCredito,
+            ...(tipo_credito === '2' && {
+                marcaSeleccionada,
+                lineaSeleccionada: lineaSeleccionada?.linea,
+            }),
+        };
+    
+        localStorage.setItem('datosCredito', JSON.stringify(datosCredito));
+        
+        navigate(`/cliente/${tipo_documento}/${numero_documento}/${tipo_credito}`);
     };
+    
 
     const labelValor = tipo_credito === '2' ? 'Precio Moto' : tipo_credito === '3' ? 'Precio eBike' : 'Valor Solicitud';
 
@@ -142,7 +165,7 @@ export default function Simulacion() {
                                     type="text"
                                     className="form-control"
                                     value={valorSolicitud}
-                                    onChange={(e) => setValorSolicitud(e.target.value.replace(/\D/g, ''))} // Solo números
+                                    onChange={(e) => setValorSolicitud(e.target.value.replace(/\D/g, ''))}
                                 />
                             </div>
                             <div className="col-md-6">
