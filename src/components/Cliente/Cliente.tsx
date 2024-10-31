@@ -36,6 +36,7 @@ const Cliente: React.FC = () => {
 
     return (
         <div className="d-flex justify-content-center align-items-center vh-100">
+            <h4 className="text-center">Datos de Cliente</h4>
             <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className="p-4 border rounded">
                 <div className="row mb-3">
                     <div className="col-md-6">
