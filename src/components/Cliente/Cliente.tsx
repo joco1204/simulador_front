@@ -76,24 +76,15 @@ export default function Clientes() {
 
             const creditoResponse = await createCredito(creditoData);
 
-            if (creditoResponse) {
-                localStorage.removeItem('datosCredito');
-                Swal.fire({
-                    title: 'Éxito',
-                    text: 'Su solicitud ha sido creada con éxito',
-                    icon: 'success',
-                    confirmButtonText: 'Aceptar'
-                }).then(() => {
-                    navigate('/');
-                });
-            } else {
-                Swal.fire({
-                    title: 'Error',
-                    text: 'Su solicitud no pudo ser creada',
-                    icon: 'error',
-                    confirmButtonText: 'Aceptar'
-                });
-            }
+            localStorage.removeItem('datosCredito');
+            Swal.fire({
+                title: 'Éxito',
+                text: 'Su solicitud ha sido creada con éxito',
+                icon: 'success',
+                confirmButtonText: 'Aceptar'
+            }).then(() => {
+                navigate('/');
+            });
         } else {
             Swal.fire({
                 title: 'Error',
