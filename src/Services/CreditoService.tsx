@@ -17,8 +17,10 @@ export const fetchCredito = async (id_cliente: number): Promise<Credito | null> 
 
 export const createCredito = async (creditoData: Omit<Credito, 'id'>): Promise<Credito | null> => {
     try {
-        const response = await axios.post('/credito', creditoData);
-
+        const response = await axios.post(
+            '/credito', 
+            creditoData
+        );
         if (response.data && response.data.id) {
             return response.data;
         }

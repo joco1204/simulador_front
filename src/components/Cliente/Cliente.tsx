@@ -1,8 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { Cliente } from '../../Interfaces/ClienteInterface';
 import { createCliente } from '../../Services/ClienteService';
+import { createCredito } from '../../Services/CreditoService';
+import { Credito } from '../../Interfaces/CreditoInterface';
 
 export default function Clientes() {
     const { tipo_documento = "", numero_documento = "" } = useParams(); 
@@ -49,14 +51,49 @@ export default function Clientes() {
             celular_referencia_2: formData.celularRef2,
         };
 
-        const response = await createCliente(clienteData);
+        const clienteResponse = await createCliente(clienteData);
 
-        if (response.id) {
+        if (clienteResponse && clienteResponse.id) {
+            const datosCredito = JSON.parse(localStorage.getItem('datosCredito') || '{}');
 
+            const creditoData: Omit<Credito, 'id'> = {
+                id_cliente: String(clienteResponse.id),
+                id_tipo_credito: datosCredito.tipo_credito,
+                id_periodo_pago: datosCredito.periodoSeleccionado,
+                valor_solicitud: datosCredito.valorSolicitud,
+                numero_cuotas: datosCredito.numeroCuotas,
+                valor_interes: datosCredito.valorInteres,
+                valor_cuota_mensual: datosCredito.valorCuota,
+                valor_cuota_periodo: datosCredito.valorCuota,
+                id_linea_moto: datosCredito.lineaSeleccionada ? String(datosCredito.lineaSeleccionada.id) : '',
+                valor_total: datosCredito.valorTotal,
+                fecha_solicitud: datosCredito.fechaSolicitud,
+                fecha_inicio_credito: datosCredito.fechaInicioCredito,
+                fecha_fin_credito: datosCredito.fechaFinCredito,
+                estado: 1
+            };
+
+            const creditoResponse = await createCredito(creditoData);
+
+            if (creditoResponse) {
+                Swal.fire({
+                    title: 'Éxito',
+                    text: 'Su solicitud ha sido creada con éxito',
+                    icon: 'success',
+                    confirmButtonText: 'Aceptar'
+                });
+            } else {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Su solicitud no pudo ser creada',
+                    icon: 'error',
+                    confirmButtonText: 'Aceptar'
+                });
+            }
         } else {
             Swal.fire({
-                title: 'Error!',
-                text: response.message,
+                title: 'Error',
+                text: 'No se pudo crear el cliente',
                 icon: 'error',
                 confirmButtonText: 'Aceptar'
             });

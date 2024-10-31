@@ -1,5 +1,5 @@
 export interface Credito {
-    id: number;
+    id?: number;
     id_cliente: string;
     id_tipo_credito: string;
     id_periodo_pago: string;
