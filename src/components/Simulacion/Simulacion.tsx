@@ -83,7 +83,6 @@ export default function Simulacion() {
     };
 
     const handleConfirmarCliente = () => {
-        // Verifica si el tipo de crédito es 2 para incluir marca y línea
         const datosCredito = {
             tipo_documento,
             numero_documento,
