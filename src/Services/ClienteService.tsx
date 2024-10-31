@@ -22,3 +22,24 @@ export const fetchCliente = async (tipo_documento: string, numero_documento: str
         return null;
     }
 };
+
+export const createCliente = async (clienteData: Omit<Cliente, 'id'>): Promise<{ message: string; id?: number }> => {
+    try {
+        const response = await axios.post(
+            '/clientes', 
+            clienteData
+        );
+        
+        if (response.status === 201) {
+            return {
+                message: "Cliente creado",
+                id: response.data.id
+            };
+        }
+
+        return { message: "Error inesperado al crear cliente" };
+    } catch (error) {
+        console.error('Error al registrar el cliente:', error);
+        return { message: 'Error al registrar cliente' };
+    }
+};

@@ -1,8 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import { Cliente } from '../../Interfaces/ClienteInterface';
+import { createCliente } from '../../Services/ClienteService';
 
-const Cliente: React.FC = () => {
-    const { tipo_documento, numero_documento, tipo_credito } = useParams();
+export default function Clientes() {
+    const { tipo_documento = "", numero_documento = "" } = useParams(); 
 
     const [formData, setFormData] = useState({
         nombres: '',
@@ -29,9 +32,35 @@ const Cliente: React.FC = () => {
         setFormData({ ...formData, [name]: newValue });
     };
 
-    const handleSubmit = () => {
-        
-        console.log('Datos del formulario:', formData);
+    const handleSubmit = async () => {
+        const clienteData: Omit<Cliente, 'id'> = {
+            tipo_documento,
+            numero_documento,
+            nombres: formData.nombres,
+            apellidos: formData.apellidos,
+            celular: formData.celular,
+            direccion: formData.direccion,
+            barrio: formData.barrio,
+            ciudad: formData.ciudad,
+            departamento: formData.departamento,
+            nombre_referencia_1: formData.nombreRef1,
+            celular_referencia_1: formData.celularRef1,
+            nombre_referencia_2: formData.nombreRef2,
+            celular_referencia_2: formData.celularRef2,
+        };
+
+        const response = await createCliente(clienteData);
+
+        if (response.id) {
+
+        } else {
+            Swal.fire({
+                title: 'Error!',
+                text: response.message,
+                icon: 'error',
+                confirmButtonText: 'Aceptar'
+            });
+        }
     };
 
     return (
@@ -172,6 +201,4 @@ const Cliente: React.FC = () => {
             </div>
         </div>
     );
-};
-
-export default Cliente;
+}

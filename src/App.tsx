@@ -4,7 +4,7 @@ import Header from './components/Header/Header'
 import Footer from './components/Footer/Footer';
 import Home from './components/Home/Home';
 import Simulacion from './components/Simulacion/Simulacion';
-import Cliente from './components/Cliente/Cliente';
+import Clientes from './components/Cliente/Cliente';
 
 export default function App() {
     return (
@@ -17,7 +17,7 @@ export default function App() {
                             <Routes>
                                 <Route path="/" element={<Home />} />
                                 <Route path="/simulacion/:tipo_documento/:numero_documento/:tipo_credito" element={<Simulacion />} />
-                                <Route path="/cliente/:tipo_documento/:numero_documento/:tipo_credito" element={<Cliente />} />
+                                <Route path="/cliente/:tipo_documento/:numero_documento/:tipo_credito" element={<Clientes />} />
                             </Routes>
                         </div>
                     </div>

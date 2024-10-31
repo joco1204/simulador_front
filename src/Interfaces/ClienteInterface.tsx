@@ -1,5 +1,5 @@
 export interface Cliente {
-    id: number;
+    id?: number;
     tipo_documento: string;
     numero_documento: string;
     nombres: string;
