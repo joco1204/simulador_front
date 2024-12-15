@@ -74,7 +74,7 @@ export default function Clientes() {
                 estado: 1
             };
 
-            const creditoResponse = await createCredito(creditoData);
+            await createCredito(creditoData);
 
             localStorage.removeItem('datosCredito');
             Swal.fire({

@@ -32,6 +32,7 @@ export default function Simulacion() {
         }
         fetchMarcaMoto().then(setMarcas);
         fetchPeriodos().then(setPeriodos);
+        setFechaSolicitud(new Date().toISOString().split('T')[0]);
     }, []);
 
     const fetchLineasPorMarca = async (marcaId: number) => {
